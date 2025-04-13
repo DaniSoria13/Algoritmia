@@ -62,6 +62,13 @@ public class Hanoi {
             }
         }
     }
-
+    private String torreNombre(int columna) {
+        return switch (columna) {
+            case 0 -> "A";
+            case 1 -> "B";
+            case 2 -> "C";
+            default -> "?";
+        };
+    }
 }
 
