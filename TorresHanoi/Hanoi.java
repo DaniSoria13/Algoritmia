@@ -70,5 +70,13 @@ public class Hanoi {
             default -> "?";
         };
     }
+
+    public void resolver() {
+        System.out.println("Estado inicial:");
+        mostrarTorres();
+        moverDiscos(3, 0, 2, 1); // mover de A(0) a C(2) usando B(1)
+        System.out.println("\nHas completado el juego en " + movimientos + " movimientos.");
+    }
+
 }
 
