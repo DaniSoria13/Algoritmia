@@ -45,4 +45,13 @@ public class NReinas {
 
         return true;
     }
+    private void imprimirTablero() {
+        for (int[] fila : tablero) {
+            for (int celda : fila) {
+                System.out.print((celda == 1 ? "Q " : ". "));
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
 }
