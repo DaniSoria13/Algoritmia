@@ -7,7 +7,7 @@ import Caballo.CaballoTeclado;
 import java.util.Scanner;
 
 public class main {
-    public static void main(String[] args) {
+    public static <TorresHanoi> void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
         System.out.println("Seleccione un problema:");
@@ -21,12 +21,13 @@ public class main {
             case 1:
                 System.out.println("\nResolviendo Torres de Hanoi con 3 discos:");
                 TorresHanoi hanoi = new TorresHanoi();
-                hanoi.resolver();
+                Hanoi.resolver();
                 break;
             case 2:
                 System.out.print("Ingrese el número de reinas (N): ");
                 int nReinas = sc.nextInt();
-                NReinas reinas = new NReinas(nReinas);
+                Object NReinas = null;
+                NReinas reinas = new NReinas(null);
                 if (!reinas.resolver()) {
                     System.out.println("No hay solución.");
                 }

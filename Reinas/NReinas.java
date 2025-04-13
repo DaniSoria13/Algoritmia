@@ -5,6 +5,9 @@ public class NReinas {
     private int N;
     private int[][] tablero;
 
+    public NReinas(Object nReinas) {
+    }
+
     public void nReinas(int n) {
         this.N = n;
         tablero = new int[N][N];

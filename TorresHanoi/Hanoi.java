@@ -71,7 +71,7 @@ public class Hanoi {
         };
     }
 
-    public void resolver() {
+    public static void resolver() {
         System.out.println("Estado inicial:");
         mostrarTorres();
         moverDiscos(3, 0, 2, 1); // mover de A(0) a C(2) usando B(1)
