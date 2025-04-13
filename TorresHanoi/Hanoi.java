@@ -1,13 +1,15 @@
 package TorresHanoi;
 
 public class Hanoi {
-    public void resolver(int n, char origen, char auxiliar, char destino) {
-        if (n == 1) {
-            System.out.println("Mover disco 1 de " + origen + " a " + destino);
-            return;
-        }
-        resolver(n - 1, origen, destino, auxiliar);
-        System.out.println("Mover disco " + n + " de " + origen + " a " + destino);
-        resolver(n - 1, auxiliar, origen, destino);
+    private int[][] torres = new int[3][3]; // torres[fila][columna]
+    private int movimientos = 0;
+
+    public void torresdehanoi() {
+        // Colocar los discos en la torre A (columna 0), desde la base hacia arriba
+        torres[0][0] = 3;
+        torres[1][0] = 2;
+        torres[2][0] = 1;
     }
+
+
 }
