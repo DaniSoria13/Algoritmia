@@ -23,6 +23,45 @@ public class Hanoi {
         System.out.println("---------");
         System.out.println("  A B C\n");
     }
-}
+
+    private void moverDiscos(int n, int origen, int destino, int auxiliar) {
+        if (n == 1) {
+            moverUno(origen, destino);
+            return;
+        }
+        moverDiscos(n - 1, origen, auxiliar, destino);
+        moverUno(origen, destino);
+        moverDiscos(n - 1, auxiliar, destino, origen);
+    }
+
+    private void moverUno(int origen, int destino) {
+        int disco = sacarDisco(origen);
+        ponerDisco(destino, disco);
+        movimientos++;
+        System.out.println("\nMovimiento " + movimientos + ": Mover disco " + disco + " de " + torreNombre(origen) + " a " + torreNombre(destino));
+        mostrarTorres();
+
+
+    }
+    private int sacarDisco(int columna) {
+        for (int fila = 2; fila >= 0; fila--) {
+            if (torres[fila][columna] != 0) {
+                int disco = torres[fila][columna];
+                torres[fila][columna] = 0;
+                return disco;
+            }
+        }
+        return 0; // no debería ocurrir
+    }
+
+    private void ponerDisco(int columna, int disco) {
+        for (int fila = 0; fila < 3; fila++) {
+            if (torres[fila][columna] == 0) {
+                torres[fila][columna] = disco;
+                return;
+            }
+        }
+    }
 
 }
+
