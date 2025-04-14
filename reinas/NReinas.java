@@ -1,4 +1,4 @@
-package Reinas;
+package reinas;
 
 public class NReinas {
 

@@ -1,6 +1,6 @@
-package TorresHanoi;
+package hanoi;
 
-public class Hanoi {
+public class TorresDeHanoi {
     private int[][] torres = new int[3][3]; // torres[fila][columna]
     private int movimientos = 0;
 

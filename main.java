@@ -1,8 +1,8 @@
 // src/Main.java
 
-import TorresHanoi.Hanoi;
-import Reinas.NReinas;
-import Caballo.CaballoTeclado;
+import hanoi.TorresDeHanoi;
+import reinas.NReinas;
+import caballo.CaballoTeclado;
 
 import java.util.Scanner;
 
@@ -21,7 +21,7 @@ public class main {
             case 1:
                 System.out.println("\nResolviendo Torres de Hanoi con 3 discos:");
                 TorresHanoi hanoi = new TorresHanoi();
-                Hanoi.resolver();
+                TorresDeHanoi.resolver();
                 break;
             case 2:
                 System.out.print("Ingrese el número de reinas (N): ");
@@ -40,6 +40,7 @@ public class main {
                 System.out.println("Total de movimientos válidos para " + pasos + " paso(s): " + total);
                 break;
             default:
+
                 System.out.println("Opción inválida.");
         }
 

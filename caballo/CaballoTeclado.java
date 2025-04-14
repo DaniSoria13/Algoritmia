@@ -1,4 +1,4 @@
-package Caballo;
+package caballo;
 
 public class CaballoTeclado {
 
