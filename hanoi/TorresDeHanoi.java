@@ -1,27 +1,21 @@
+// src/hanoi/TorresDeHanoi.java
 package hanoi;
 
 public class TorresDeHanoi {
-    private int[][] torres = new int[3][3]; // torres[fila][columna]
+    private int[][] torres = new int[3][3]; // [fila][columna]
     private int movimientos = 0;
 
-    public void torresdehanoi() {
-        // Colocar los discos en la torre A (columna 0), desde la base hacia arriba
-        torres[0][0] = 1;
+    public TorresDeHanoi() {
+        torres[0][0] = 3;
         torres[1][0] = 2;
-        torres[2][0] = 3;
+        torres[2][0] = 1;
     }
 
-    private void mostrarTorres() {
-        System.out.println("Estado actual:");
-        for (int fila = 0; fila < 3; fila++) {
-            for (int col = 0; col < 3; col++) {
-                int disco = torres[fila][col];
-                System.out.print(" " + (disco == 0 ? "." : disco));
-            }
-            System.out.println();
-        }
-        System.out.println("---------");
-        System.out.println("  A B C\n");
+    public void resolver() {
+        System.out.println("Estado inicial:");
+        mostrarTorres();
+        moverDiscos(3, 0, 2, 1);
+        System.out.println("\nHas completado el juego en " + movimientos + " movimientos.");
     }
 
     private void moverDiscos(int n, int origen, int destino, int auxiliar) {
@@ -40,9 +34,8 @@ public class TorresDeHanoi {
         movimientos++;
         System.out.println("\nMovimiento " + movimientos + ": Mover disco " + disco + " de " + torreNombre(origen) + " a " + torreNombre(destino));
         mostrarTorres();
-
-
     }
+
     private int sacarDisco(int columna) {
         for (int fila = 2; fila >= 0; fila--) {
             if (torres[fila][columna] != 0) {
@@ -51,7 +44,7 @@ public class TorresDeHanoi {
                 return disco;
             }
         }
-        return 0; // no debería ocurrir
+        return 0;
     }
 
     private void ponerDisco(int columna, int disco) {
@@ -62,6 +55,7 @@ public class TorresDeHanoi {
             }
         }
     }
+
     private String torreNombre(int columna) {
         return switch (columna) {
             case 0 -> "A";
@@ -71,12 +65,16 @@ public class TorresDeHanoi {
         };
     }
 
-    public static void resolver() {
-        System.out.println("Estado inicial:");
-        mostrarTorres();
-        moverDiscos(3, 0, 2, 1); // mover de A(0) a C(2) usando B(1)
-        System.out.println("\nHas completado el juego en " + movimientos + " movimientos.");
+    private void mostrarTorres() {
+        System.out.println("Estado actual:");
+        for (int fila = 0; fila < 3; fila++) {
+            for (int col = 0; col < 3; col++) {
+                int disco = torres[fila][col];
+                System.out.print(" " + (disco == 0 ? "." : disco));
+            }
+            System.out.println();
+        }
+        System.out.println("---------");
+        System.out.println("  A B C\n");
     }
-
 }
-
