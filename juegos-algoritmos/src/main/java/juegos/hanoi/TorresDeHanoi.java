@@ -1,80 +1,92 @@
-// src/hanoi/TorresDeHanoi.java
 package juegos.hanoi;
 
 public class TorresDeHanoi {
-    private int[][] torres = new int[3][3]; // [fila][columna]
-    private int movimientos = 0;
+    private int[][] torres;
+    private int movimientos;
 
     public TorresDeHanoi() {
-        torres[0][0] = 3;
-        torres[1][0] = 2;
-        torres[2][0] = 1;
-    }
-
-    public void resolver() {
-        System.out.println("Estado inicial:");
-        mostrarTorres();
-        moverDiscos(3, 0, 2, 1);
-        System.out.println("\nHas completado el juego en " + movimientos + " movimientos.");
-    }
-
-    private void moverDiscos(int n, int origen, int destino, int auxiliar) {
-        if (n == 1) {
-            moverUno(origen, destino);
-            return;
+        torres = new int[3][3];
+        for (int i = 0; i < 3; i++) {
+            torres[0][i] = i + 1;
         }
-        moverDiscos(n - 1, origen, auxiliar, destino);
-        moverUno(origen, destino);
-        moverDiscos(n - 1, auxiliar, destino, origen);
+        movimientos = 0;
     }
 
-    private void moverUno(int origen, int destino) {
-        int disco = sacarDisco(origen);
-        ponerDisco(destino, disco);
-        movimientos++;
-        System.out.println("\nMovimiento " + movimientos + ": Mover disco " + disco + " de " + torreNombre(origen) + " a " + torreNombre(destino));
-        mostrarTorres();
-    }
-
-    private int sacarDisco(int columna) {
-        for (int fila = 2; fila >= 0; fila--) {
-            if (torres[fila][columna] != 0) {
-                int disco = torres[fila][columna];
-                torres[fila][columna] = 0;
-                return disco;
+    public void jugar() {
+        java.util.Scanner sc = new java.util.Scanner(System.in);
+        System.out.println("\n--- Juego: Torres de Hanoi (3 discos) ---");
+        while (!juegoCompleto()) {
+            mostrarTorres();
+            System.out.print("Seleccione torre origen (0-2): ");
+            int origen = sc.nextInt();
+            System.out.print("Seleccione torre destino (0-2): ");
+            int destino = sc.nextInt();
+            if (moverDisco(origen, destino)) {
+                movimientos++;
+            } else {
+                System.out.println("Movimiento no válido.");
             }
         }
-        return 0;
+        mostrarTorres();
+        System.out.println("Juego completado en " + movimientos + " movimientos.\n");
     }
 
-    private void ponerDisco(int columna, int disco) {
-        for (int fila = 0; fila < 3; fila++) {
-            if (torres[fila][columna] == 0) {
-                torres[fila][columna] = disco;
-                return;
+    private boolean moverDisco(int origen, int destino) {
+        int discoOrigen = obtenerDiscoSuperior(origen);
+        if (discoOrigen == -1) return false;
+        int discoDestino = obtenerDiscoSuperior(destino);
+        if (discoDestino != -1 && discoDestino < discoOrigen) return false;
+        quitarDisco(origen);
+        ponerDisco(destino, discoOrigen);
+        return true;
+    }
+
+    private int obtenerDiscoSuperior(int torre) {
+        for (int i = 0; i < 3; i++) {
+            if (torres[torre][i] != 0) {
+                return torres[torre][i];
+            }
+        }
+        return -1;
+    }
+
+    private void quitarDisco(int torre) {
+        for (int i = 0; i < 3; i++) {
+            if (torres[torre][i] != 0) {
+                torres[torre][i] = 0;
+                break;
             }
         }
     }
 
-    private String torreNombre(int columna) {
-        return switch (columna) {
-            case 0 -> "A";
-            case 1 -> "B";
-            case 2 -> "C";
-            default -> "?";
-        };
+    private void ponerDisco(int torre, int disco) {
+        for (int i = 2; i >= 0; i--) {
+            if (torres[torre][i] == 0) {
+                torres[torre][i] = disco;
+                break;
+            }
+        }
+    }
+
+    private boolean juegoCompleto() {
+        for (int i = 0; i < 2; i++) {
+            if (torres[2][i] == 0) return false;
+        }
+        return true;
     }
 
     private void mostrarTorres() {
-        System.out.println("Estado actual:");
+        System.out.println("\nEstado actual de las torres:");
         for (int fila = 0; fila < 3; fila++) {
-            for (int col = 0; col < 3; col++) {
-                int disco = torres[fila][col];
-                System.out.print(" " + (disco == 0 ? "." : disco));
+            for (int t = 0; t < 3; t++) {
+                if (torres[t][fila] == 0) {
+                    System.out.print(" | ");
+                } else {
+                    System.out.print(" " + torres[t][fila] + " ");
+                }
             }
             System.out.println();
         }
-        System.out.println("---------");
-        System.out.println("  A B C\n");
+        System.out.println(" 0   1   2\n");
     }
 }
