@@ -1,4 +1,4 @@
-package reinas;
+package juegos.reinas;
 
 public class NReinas {
 

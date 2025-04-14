@@ -1,5 +1,5 @@
 // src/hanoi/TorresDeHanoi.java
-package hanoi;
+package juegos.hanoi;
 
 public class TorresDeHanoi {
     private int[][] torres = new int[3][3]; // [fila][columna]

@@ -1,12 +1,12 @@
 // src/Main.java
 
-import hanoi.TorresDeHanoi;
-import reinas.NReinas;
-import caballo.CaballoTeclado;
+import juegos.hanoi.TorresDeHanoi;
+import juegos.reinas.NReinas;
+import juegos.caballo.CaballoTeclado;
 
 import java.util.Scanner;
 
-public class main {
+public class juegos.Main {
     public static <TorresHanoi> void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 

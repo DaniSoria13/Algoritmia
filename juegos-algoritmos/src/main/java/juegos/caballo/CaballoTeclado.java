@@ -1,4 +1,4 @@
-package caballo;
+package juegos.caballo;
 
 public class CaballoTeclado {
 
