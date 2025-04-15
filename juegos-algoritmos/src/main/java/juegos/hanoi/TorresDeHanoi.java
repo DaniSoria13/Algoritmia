@@ -1,56 +1,76 @@
 package juegos.hanoi;
 
+import java.util.InputMismatchException;
+
 public class TorresDeHanoi {
     private int[][] torres;  // Usamos un arreglo bidimensional para las torres
     private int movimientos;
-    java.util.Scanner sc = new java.util.Scanner(System.in);
 
     public void jugar() {
-        // Usamos una forma de entrada sencilla sin Scanner y sin excepciones complejas
-        System.out.println("--- Torres de Hanoi ---");
-        System.out.print("Selecciona nivel (1-5): ");
-        int nivel = sc.nextInt();
+        // Empezamos con el primer nivel (3 discos)
+        int nivel = 1;
 
-        NivelHanoi config = new NivelHanoi(nivel);
-        int numDiscos = config.getNumeroDiscos();
-        movimientos = 0;
-        inicializarTorres(numDiscos);
+        while (true) {
+            System.out.println("--- Torres de Hanoi - Nivel " + nivel + " ---");
+            NivelHanoi config = new NivelHanoi(nivel);
+            int numDiscos = config.getNumeroDiscos();
+            movimientos = 0;
+            inicializarTorres(numDiscos);
 
-        // Ejecutar el juego mientras no se hayan movido todos los discos a la torre C
-        while (torres[2].length != numDiscos) {
+            // Ejecutar el juego mientras no se hayan movido todos los discos a la torre C
+            while (torres[2].length != numDiscos) {
+                mostrarTorres();
+                System.out.print("Mover de (A, B, C): ");
+                String desdeLetra = System.console().readLine().toUpperCase();
+                System.out.print("Mover a (A, B, C): ");
+                String hastaLetra = System.console().readLine().toUpperCase();
+
+                int desde = letraATorre(desdeLetra);
+                int hasta = letraATorre(hastaLetra);
+
+                if (desde == -1 || hasta == -1) {
+                    System.out.println("Torre inválida. Intenta de nuevo.");
+                    continue;
+                }
+
+                if (torres[desde].length == 0) {
+                    System.out.println("No hay discos en la torre " + desdeLetra);
+                    continue;
+                }
+
+                int disco = torres[desde][torres[desde].length - 1];
+                if (torres[hasta].length > 0 && torres[hasta][torres[hasta].length - 1] < disco) {
+                    System.out.println("No puedes poner un disco grande sobre uno pequeño.");
+                    continue;
+                }
+
+                // Mover disco de una torre a otra
+                torres[hasta] = agregarDisco(torres[hasta], disco);
+                torres[desde] = quitarDisco(torres[desde]);
+                movimientos++;
+            }
+
             mostrarTorres();
-            System.out.print("Mover de (A, B, C): ");
-            String desdeLetra = System.console().readLine().toUpperCase();
-            System.out.print("Mover a (A, B, C): ");
-            String hastaLetra = System.console().readLine().toUpperCase();
+            System.out.println("¡Has completado el nivel " + nivel + " en " + movimientos + " movimientos!");
 
-            int desde = letraATorre(desdeLetra);
-            int hasta = letraATorre(hastaLetra);
+            // Preguntar si el jugador quiere pasar al siguiente nivel
+            System.out.print("¿Quieres pasar al siguiente nivel? (Seleccione \"0\" si no desea seguir jugando, y seleccione \"1\" si quiere pasar al siguiente nivel): ");
+            String respuesta = System.console().readLine();
 
-            if (desde == -1 || hasta == -1) {
-                System.out.println("Torre inválida. Intenta de nuevo.");
-                continue;
+            if (respuesta.equals("0")) {
+                System.out.println("Gracias por jugar. El juego ha terminado.");
+                break;  // Salir del bucle, finalizando el juego
+            } else if (respuesta.equals("1")) {
+                nivel++;  // Aumentar el nivel para el siguiente nivel
+                if (nivel > 5) {
+                    System.out.println("¡Ya has completado todos los niveles! El juego ha terminado.");
+                    break;  // Termina el juego si ya se han completado todos los niveles
+                }
+            } else {
+                System.out.println("Opción no válida. Salir del juego.");
+                break;  // Terminar el juego si la opción no es válida
             }
-
-            if (torres[desde].length == 0) {
-                System.out.println("No hay discos en la torre " + desdeLetra);
-                continue;
-            }
-
-            int disco = torres[desde][torres[desde].length - 1];
-            if (torres[hasta].length > 0 && torres[hasta][torres[hasta].length - 1] < disco) {
-                System.out.println("No puedes poner un disco grande sobre uno pequeño.");
-                continue;
-            }
-
-            // Mover disco de una torre a otra
-            torres[hasta] = agregarDisco(torres[hasta], disco);
-            torres[desde] = quitarDisco(torres[desde]);
-            movimientos++;
         }
-
-        mostrarTorres();
-        System.out.println("¡Has completado el juego en " + movimientos + " movimientos!");
     }
 
     private void inicializarTorres(int numDiscos) {
