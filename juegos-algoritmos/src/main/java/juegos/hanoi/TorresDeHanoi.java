@@ -3,12 +3,13 @@ package juegos.hanoi;
 public class TorresDeHanoi {
     private int[][] torres;  // Usamos un arreglo bidimensional para las torres
     private int movimientos;
+    java.util.Scanner sc = new java.util.Scanner(System.in);
 
     public void jugar() {
         // Usamos una forma de entrada sencilla sin Scanner y sin excepciones complejas
         System.out.println("--- Torres de Hanoi ---");
         System.out.print("Selecciona nivel (1-5): ");
-        int nivel = 1;
+        int nivel = sc.nextInt();
 
         NivelHanoi config = new NivelHanoi(nivel);
         int numDiscos = config.getNumeroDiscos();
