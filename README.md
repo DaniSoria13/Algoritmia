@@ -2,7 +2,7 @@
 Este proyecto incluye tres juegos clásicos de algoritmos implementados en Java puro, organizados bajo una estructura Maven. Cada juego tiene su lógica encapsulada y está diseñado para ejecutarse desde un menú interactivo por consola.
 
 ## 🧩 ¿Cómo se juega cada uno?
-1. 🗼 Torres de Hanoi
+### 1. 🗼 Torres de Hanoi
 Objetivo: Mover todos los discos desde la torre A hasta la torre C siguiendo estas reglas:
 
 · Solo puedes mover un disco a la vez.
