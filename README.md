@@ -46,6 +46,8 @@ Usamos Maven para estructurar el proyecto, lo cual facilita:
 · Una estructura limpia y mantenible.
 
 ## 📁 Paquetes
+
+```
 juegos/
 ├── Main.java                   # Menú principal
 ├── hanoi/
@@ -55,7 +57,7 @@ juegos/
 │   └── NReinas.java           # Juego de las N reinas
 └── caballo/
     └── MovimientoCaballo.java # Juego del caballo
-
+```
 
 ## ⚙️ Estructuras de Programación por Juego
 ### 📌 Torres de Hanoi
