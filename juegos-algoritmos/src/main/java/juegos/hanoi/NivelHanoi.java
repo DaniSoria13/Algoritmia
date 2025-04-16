@@ -4,7 +4,7 @@ public class NivelHanoi {
     private int nivel;
 
     public NivelHanoi(int nivel) {
-        if (nivel < 1 || nivel > 5) {
+        if (nivel < 1 || nivel > 5) { // Si el nivel no es válido, lo ajustamos a 1
             this.nivel = 1;
         } else {
             this.nivel = nivel;

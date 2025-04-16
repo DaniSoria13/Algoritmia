@@ -15,13 +15,13 @@ public class MovimientoCaballo {
     };
 
     public void jugar() {
-        java.util.Scanner sc = new java.util.Scanner(System.in);
+        java.util.Scanner sc = new java.util.Scanner(System.in); // Inicializamos el scanner para poder leer la entrada del usuario
         System.out.println("\n--- Juego: Movimientos del Caballo ---");
         System.out.print("Ingrese la cantidad de movimientos: ");
-        int movimientos = sc.nextInt();
+        int movimientos = sc.nextInt(); // Registramos la cantidad de movimientos que el usuario desea realizar
 
         int total = 0;
-        for (int i = 0; i <= 9; i++) {
+        for (int i = 0; i <= 9; i++) { //  Mediante un bucle recorremos todas las posiciones del tablero
             total += contarMovimientos(i, movimientos);
         }
 

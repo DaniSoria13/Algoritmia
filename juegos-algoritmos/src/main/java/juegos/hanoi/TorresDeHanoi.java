@@ -3,7 +3,7 @@ package juegos.hanoi;
 import java.util.InputMismatchException;
 
 public class TorresDeHanoi {
-    private int[][] torres;  // Usamos un arreglo bidimensional para las torres
+    private int[][] torres;  // Usamos un array para las torres
     private int movimientos;
 
     public void jugar() {
