@@ -2,63 +2,150 @@ package juegos.hanoi;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Vector;
 
 public class TorresDeHanoi extends JFrame {
     private JTextArea areaResultado;
-    private int movimientos;
+    private JTextField inputOrigen;
+    private JTextField inputDestino;
+    private JButton moverBtn;
+
+    private Vector<Integer> torreA;
+    private Vector<Integer> torreB;
+    private Vector<Integer> torreC;
+
+    private int nivelActual = 3;
+    private int movimientos = 0;
 
     public TorresDeHanoi() {
-        setTitle("Torres de Hanoi");
-        setSize(400, 300); // Tamaño de la ventana
-        setLocationRelativeTo(null); // Centra la ventana
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Cierra la ventana sin cerrar la aplicación
-        setLayout(new BorderLayout()); // Diseño de la ventana
+        setTitle("Torres de Hanoi Interactivo");
+        setSize(500, 400);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLayout(new BorderLayout());
 
-        JLabel label = new JLabel("Número de discos:");
-        JTextField input = new JTextField(5); // Campo para ingresar el número de discos
-        JButton resolverBtn = new JButton("Resolver");
         areaResultado = new JTextArea();
-        areaResultado.setEditable(false); // El área de texto no se puede editar directamente
+        areaResultado.setEditable(false);
+        JScrollPane scroll = new JScrollPane(areaResultado);
 
-        // Panel de entrada para el número de discos
-        JPanel inputPanel = new JPanel();
-        inputPanel.add(label);
-        inputPanel.add(input);
-        inputPanel.add(resolverBtn);
+        JPanel controlPanel = new JPanel();
+        controlPanel.add(new JLabel("De torre (A/B/C):"));
+        inputOrigen = new JTextField(2);
+        controlPanel.add(inputOrigen);
+        controlPanel.add(new JLabel("A torre (A/B/C):"));
+        inputDestino = new JTextField(2);
+        controlPanel.add(inputDestino);
+        moverBtn = new JButton("Mover");
+        controlPanel.add(moverBtn);
 
-        add(inputPanel, BorderLayout.NORTH); // Añade el panel con los campos de entrada en la parte superior
-        add(new JScrollPane(areaResultado), BorderLayout.CENTER); // Añade el área de texto para mostrar el resultado
+        add(scroll, BorderLayout.CENTER);
+        add(controlPanel, BorderLayout.SOUTH);
 
-        // Acción al presionar el botón de resolver
-        resolverBtn.addActionListener(e -> {
-            try {
-                int n = Integer.parseInt(input.getText()); // Convierte el número de discos
-                movimientos = 0; // Reinicia el contador de movimientos
-                areaResultado.setText(""); // Limpia el área de texto
-                hanoi(n, 'A', 'C', 'B'); // Resuelve el problema de las Torres de Hanoi
-                areaResultado.append("\nMovimientos totales: " + movimientos); // Muestra el total de movimientos
-            } catch (NumberFormatException ex) {
-                areaResultado.setText("Por favor ingrese un número válido.");
+        iniciarNivel();
+
+        moverBtn.addActionListener(e -> {
+            String origen = inputOrigen.getText().trim().toUpperCase();
+            String destino = inputDestino.getText().trim().toUpperCase();
+            inputOrigen.setText("");
+            inputDestino.setText("");
+
+            if (!esTorreValida(origen) || !esTorreValida(destino)) {
+                areaResultado.append("\n❌ Torres válidas: A, B o C.\n");
+                return;
             }
+
+            moverDisco(origen, destino);
         });
 
-        setVisible(true); // Muestra la ventana
+        setVisible(true);
     }
 
-    // Función recursiva para resolver el problema de las Torres de Hanoi
-    private void hanoi(int n, char origen, char destino, char auxiliar) {
-        if (n == 1) {
-            areaResultado.append("Mover disco 1 de " + origen + " a " + destino + "\n");
-            movimientos++; // Incrementa el contador de movimientos
+    private boolean esTorreValida(String letra) {
+        return letra.equals("A") || letra.equals("B") || letra.equals("C");
+    }
+
+    private void iniciarNivel() {
+        areaResultado.setText("");
+        areaResultado.append("=== Nivel con " + nivelActual + " discos ===\n");
+
+        torreA = new Vector<>();
+        torreB = new Vector<>();
+        torreC = new Vector<>();
+        movimientos = 0;
+
+        for (int i = nivelActual; i >= 1; i--) {
+            torreA.add(i);
+        }
+
+        mostrarTorres();
+    }
+
+    private void mostrarTorres() {
+        areaResultado.append("\nEstado actual:\n");
+        areaResultado.append("Torre A: " + torreA + "\n");
+        areaResultado.append("Torre B: " + torreB + "\n");
+        areaResultado.append("Torre C: " + torreC + "\n");
+    }
+
+    private Vector<Integer> obtenerTorre(String letra) {
+        switch (letra) {
+            case "A": return torreA;
+            case "B": return torreB;
+            case "C": return torreC;
+            default: return null;
+        }
+    }
+
+    private void moverDisco(String origen, String destino) {
+        Vector<Integer> torreOrigen = obtenerTorre(origen);
+        Vector<Integer> torreDestino = obtenerTorre(destino);
+
+        if (torreOrigen == null || torreDestino == null) return;
+
+        if (torreOrigen.isEmpty()) {
+            areaResultado.append("\n❌ La torre " + origen + " está vacía.\n");
             return;
         }
-        hanoi(n - 1, origen, auxiliar, destino); // Mueve los discos restantes
-        areaResultado.append("Mover disco " + n + " de " + origen + " a " + destino + "\n");
-        movimientos++; // Incrementa el contador de movimientos
-        hanoi(n - 1, auxiliar, destino, origen); // Mueve los discos restantes
+
+        int disco = torreOrigen.lastElement();
+
+        if (!torreDestino.isEmpty() && torreDestino.lastElement() < disco) {
+            areaResultado.append("\n❌ No puedes colocar un disco grande sobre uno más pequeño.\n");
+            return;
+        }
+
+        torreOrigen.remove(torreOrigen.size() - 1);
+        torreDestino.add(disco);
+        movimientos++;
+        areaResultado.append("\n✅ Moviste disco " + disco + " de " + origen + " a " + destino + ".\n");
+
+        mostrarTorres();
+        verificarVictoria();
     }
 
-    public void jugar() {
-        new TorresDeHanoi(); // Abre el juego de Torres de Hanoi
+    private void verificarVictoria() {
+        if (torreB.size() == nivelActual || torreC.size() == nivelActual) {
+            areaResultado.append("\n🎉 ¡Nivel completado! 🎉\n");
+            areaResultado.append("Has completado el nivel en " + movimientos + " movimientos.\n");
+
+            int opcion = JOptionPane.showOptionDialog(
+                    this,
+                    "Has completado el nivel en " + movimientos + " movimientos.\n\n¿Deseas pasar al siguiente nivel?",
+                    "Nivel Completado",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    new Object[]{"Sí", "No"},
+                    "Sí"
+            );
+
+            if (opcion == JOptionPane.YES_OPTION && nivelActual < 7) {
+                nivelActual++;
+                iniciarNivel();
+            } else {
+                JOptionPane.showMessageDialog(this, "Gracias por jugar. ¡Hasta luego!");
+                dispose();
+            }
+        }
     }
 }
