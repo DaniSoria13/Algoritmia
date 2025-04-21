@@ -1,39 +1,74 @@
 package juegos.caballo;
 
-public class MovimientoCaballo {
-    private int[][] movimientosValidos = {
-            {4, 6},    // 0
-            {6, 8},    // 1
-            {7, 9},    // 2
-            {4, 8},    // 3
-            {3, 9, 0}, // 4
-            {},        // 5
-            {1, 7, 0}, // 6
-            {2, 6},    // 7
-            {1, 3},    // 8
-            {2, 4}     // 9
-    };
+import javax.swing.*;
+import java.awt.*;
 
-    public void jugar() {
-        java.util.Scanner sc = new java.util.Scanner(System.in); // Inicializamos el scanner para poder leer la entrada del usuario
-        System.out.println("\n--- Juego: Movimientos del Caballo ---");
-        System.out.print("Ingrese la cantidad de movimientos: ");
-        int movimientos = sc.nextInt(); // Registramos la cantidad de movimientos que el usuario desea realizar
+public class MovimientoCaballo extends JFrame {
+    private int[][] tablero;
+    private int n;
+    private int totalSecuencias;
 
-        int total = 0;
-        for (int i = 0; i <= 9; i++) { //  Mediante un bucle recorremos todas las posiciones del tablero
-            total += contarMovimientos(i, movimientos);
-        }
+    public MovimientoCaballo() {
+        setTitle("Movimiento del Caballo");
+        setSize(400, 200);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLayout(new BorderLayout());
 
-        System.out.println("Total de secuencias válidas: " + total + "\n");
+        JLabel label = new JLabel("Ingrese el tamaño del tablero (N x N) y número de movimientos:");
+        JTextField inputN = new JTextField(5);
+        JTextField inputMovs = new JTextField(5);
+        JButton calcularBtn = new JButton("Calcular");
+        JTextArea resultado = new JTextArea();
+        resultado.setEditable(false);
+
+        JPanel inputPanel = new JPanel();
+        inputPanel.add(new JLabel("Tamaño N:"));
+        inputPanel.add(inputN);
+        inputPanel.add(new JLabel("Movimientos:"));
+        inputPanel.add(inputMovs);
+        inputPanel.add(calcularBtn);
+
+        add(label, BorderLayout.NORTH);
+        add(inputPanel, BorderLayout.CENTER);
+        add(new JScrollPane(resultado), BorderLayout.SOUTH);
+
+        calcularBtn.addActionListener(e -> {
+            try {
+                n = Integer.parseInt(inputN.getText());
+                int movimientos = Integer.parseInt(inputMovs.getText());
+                tablero = new int[n][n];
+                totalSecuencias = 0;
+
+                for (int fila = 0; fila < n; fila++) {
+                    for (int col = 0; col < n; col++) {
+                        totalSecuencias += contarMovimientos(fila, col, movimientos);
+                    }
+                }
+
+                resultado.setText("Total de secuencias válidas: " + totalSecuencias);
+            } catch (NumberFormatException ex) {
+                resultado.setText("Por favor ingrese valores válidos.");
+            }
+        });
+
+        setVisible(true);
     }
 
-    private int contarMovimientos(int posicion, int movimientos) {
+    private int contarMovimientos(int fila, int col, int movimientos) {
+        if (fila < 0 || col < 0 || fila >= n || col >= n) return 0;
         if (movimientos == 0) return 1;
+
         int total = 0;
-        for (int destino : movimientosValidos[posicion]) {
-            total += contarMovimientos(destino, movimientos - 1);
+        int[][] movimientosCaballo = {
+                {2, 1}, {1, 2}, {-1, 2}, {-2, 1},
+                {-2, -1}, {-1, -2}, {1, -2}, {2, -1}
+        };
+
+        for (int[] mov : movimientosCaballo) {
+            total += contarMovimientos(fila + mov[0], col + mov[1], movimientos - 1);
         }
+
         return total;
     }
 }
