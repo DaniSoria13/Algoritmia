@@ -1,58 +1,71 @@
 package juegos.reinas;
 
-public class NReinas {
-    private int n;
-    private int[][] tablero;
+import javax.swing.*;
+import java.awt.*;
 
-    public void jugar() {
-        java.util.Scanner sc = new java.util.Scanner(System.in);
-        System.out.println("\n--- Juego: N Reinas ---");
-        System.out.print("Ingrese el número de reinas (N): ");
-        n = sc.nextInt();
-        tablero = new int[n][n];
+public class NReinas extends JFrame {
+    private int soluciones;
 
-        if (resolver(0)) {
-            mostrarTablero();
-        } else {
-            System.out.println("No hay solución para N = " + n + "\n");
-        }
+    public NReinas() {
+        setTitle("Problema de las N Reinas");
+        setSize(400, 250);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLayout(new BorderLayout());
+
+        JLabel label = new JLabel("Ingrese el número de reinas:");
+        JTextField input = new JTextField(5);
+        JButton calcularBtn = new JButton("Calcular");
+        JTextArea resultado = new JTextArea();
+        resultado.setEditable(false);
+
+        JPanel panel = new JPanel();
+        panel.add(label);
+        panel.add(input);
+        panel.add(calcularBtn);
+
+        add(panel, BorderLayout.NORTH);
+        add(new JScrollPane(resultado), BorderLayout.CENTER);
+
+        calcularBtn.addActionListener(e -> {
+            try {
+                int n = Integer.parseInt(input.getText());
+                soluciones = 0;
+                int[] tablero = new int[n];
+                resolver(tablero, 0, n);
+                resultado.setText("Número total de soluciones para " + n + " reinas: " + soluciones);
+            } catch (NumberFormatException ex) {
+                resultado.setText("Por favor ingrese un número válido.");
+            }
+        });
+
+        setVisible(true);
     }
 
-    private boolean resolver(int fila) {
-        if (fila == n) return true;
+    private void resolver(int[] tablero, int fila, int n) {
+        if (fila == n) {
+            soluciones++;
+            return;
+        }
 
         for (int col = 0; col < n; col++) {
-            if (esSeguro(fila, col)) {
-                tablero[fila][col] = 1;
-                if (resolver(fila + 1)) return true;
-                tablero[fila][col] = 0;
+            if (esSeguro(tablero, fila, col)) {
+                tablero[fila] = col;
+                resolver(tablero, fila + 1, n);
             }
         }
-
-        return false;
     }
 
-    private boolean esSeguro(int fila, int col) {
-        for (int i = 0; i < fila; i++)
-            if (tablero[i][col] == 1) return false;
-
-        for (int i = fila - 1, j = col - 1; i >= 0 && j >= 0; i--, j--)
-            if (tablero[i][j] == 1) return false;
-
-        for (int i = fila - 1, j = col + 1; i >= 0 && j < n; i--, j++)
-            if (tablero[i][j] == 1) return false;
-
+    private boolean esSeguro(int[] tablero, int fila, int col) {
+        for (int i = 0; i < fila; i++) {
+            if (tablero[i] == col || Math.abs(tablero[i] - col) == Math.abs(i - fila)) {
+                return false;
+            }
+        }
         return true;
     }
 
-    private void mostrarTablero() {
-        System.out.println("\nSolución encontrada:");
-        for (int[] fila : tablero) {
-            for (int celda : fila) {
-                System.out.print(celda == 1 ? "Q " : ". ");
-            }
-            System.out.println();
-        }
-        System.out.println();
+    public void jugar() {
+        new NReinas();
     }
 }
