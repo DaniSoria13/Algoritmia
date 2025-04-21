@@ -4,68 +4,71 @@ import javax.swing.*;
 import java.awt.*;
 
 public class NReinas extends JFrame {
-    private int soluciones;
+    private int soluciones; // Variable para contar las soluciones
 
     public NReinas() {
         setTitle("Problema de las N Reinas");
-        setSize(400, 250);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLayout(new BorderLayout());
+        setSize(400, 250); // Tamaño de la ventana
+        setLocationRelativeTo(null); // Centra la ventana
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Cierra la ventana al cerrar
+        setLayout(new BorderLayout()); // Establece el diseño principal
 
         JLabel label = new JLabel("Ingrese el número de reinas:");
-        JTextField input = new JTextField(5);
+        JTextField input = new JTextField(5); // Campo de texto para el número de reinas
         JButton calcularBtn = new JButton("Calcular");
-        JTextArea resultado = new JTextArea();
-        resultado.setEditable(false);
+        JTextArea resultado = new JTextArea(); // Área de texto para mostrar el resultado
+        resultado.setEditable(false); // No se puede editar directamente
 
+        // Panel para organizar los elementos de entrada
         JPanel panel = new JPanel();
         panel.add(label);
         panel.add(input);
         panel.add(calcularBtn);
 
-        add(panel, BorderLayout.NORTH);
-        add(new JScrollPane(resultado), BorderLayout.CENTER);
+        // Agrega los componentes al layout principal
+        add(panel, BorderLayout.NORTH); // Panel superior
+        add(new JScrollPane(resultado), BorderLayout.CENTER); // Área central con scroll
 
+        // Acción al presionar el botón "Calcular"
         calcularBtn.addActionListener(e -> {
             try {
-                int n = Integer.parseInt(input.getText());
-                soluciones = 0;
-                int[] tablero = new int[n];
-                resolver(tablero, 0, n);
-                resultado.setText("Número total de soluciones para " + n + " reinas: " + soluciones);
+                int n = Integer.parseInt(input.getText()); // Lee el número ingresado
+                soluciones = 0; // Reinicia el contador
+                int[] tablero = new int[n]; // Cada índice representa una fila, y su valor representa la columna
+                resolverNReinas(tablero, 0, n); // Comienza la recursión
+                resultado.setText("Número de soluciones encontradas: " + soluciones); // Muestra el resultado
             } catch (NumberFormatException ex) {
                 resultado.setText("Por favor ingrese un número válido.");
             }
         });
 
-        setVisible(true);
+        setVisible(true); // Muestra la ventana
     }
 
-    private void resolver(int[] tablero, int fila, int n) {
+    // Algoritmo recursivo para resolver el problema de N Reinas
+    private void resolverNReinas(int[] tablero, int fila, int n) {
         if (fila == n) {
-            soluciones++;
+            soluciones++; // Si se llega al final, es una solución válida
             return;
         }
 
         for (int col = 0; col < n; col++) {
-            if (esSeguro(tablero, fila, col)) {
-                tablero[fila] = col;
-                resolver(tablero, fila + 1, n);
+            if (esValido(tablero, fila, col)) {
+                tablero[fila] = col; // Coloca una reina
+                resolverNReinas(tablero, fila + 1, n); // Llama recursivamente para la siguiente fila
             }
         }
     }
 
-    private boolean esSeguro(int[] tablero, int fila, int col) {
+    // Verifica si es seguro colocar una reina en esa posición
+    private boolean esValido(int[] tablero, int fila, int col) {
         for (int i = 0; i < fila; i++) {
-            if (tablero[i] == col || Math.abs(tablero[i] - col) == Math.abs(i - fila)) {
+            if (tablero[i] == col || // Misma columna
+                    tablero[i] - i == col - fila || // Misma diagonal izquierda
+                    tablero[i] + i == col + fila) { // Misma diagonal derecha
                 return false;
             }
         }
         return true;
-    }
-
-    public void jugar() {
-        new NReinas();
     }
 }
