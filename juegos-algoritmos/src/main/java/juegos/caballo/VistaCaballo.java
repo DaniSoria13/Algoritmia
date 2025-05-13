@@ -3,56 +3,69 @@ package juegos.caballo;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * VistaCaballo proporciona la interfaz gráfica para que el usuario
- * introduzca el tamaño del tablero y la posición inicial del caballo.
- */
 public class VistaCaballo extends JFrame {
     private JTextField campoTamaño;
-    private JTextField campoFila;
-    private JTextField campoColumna;
-    private JButton btnIniciar;
-    private JTextArea areaResultado;
+    private JButton btnCrear;
+    private JPanel panelTablero;
+    private JButton[][] botones;
 
     public VistaCaballo() {
         setTitle("Recorrido del Caballo");
-        setSize(500, 500);
+        setSize(600, 650);
         setLayout(new BorderLayout());
 
-        // Panel superior con campos de entrada
         JPanel panelSuperior = new JPanel();
         panelSuperior.add(new JLabel("Tamaño del tablero:"));
         campoTamaño = new JTextField(5);
+        btnCrear = new JButton("Crear tablero");
         panelSuperior.add(campoTamaño);
-
-        panelSuperior.add(new JLabel("Fila inicial:"));
-        campoFila = new JTextField(5);
-        panelSuperior.add(campoFila);
-
-        panelSuperior.add(new JLabel("Columna inicial:"));
-        campoColumna = new JTextField(5);
-        panelSuperior.add(campoColumna);
-
-        btnIniciar = new JButton("Iniciar");
-        panelSuperior.add(btnIniciar);
-
-        // Área de texto para mostrar la solución
-        areaResultado = new JTextArea();
-        areaResultado.setEditable(false);
+        panelSuperior.add(btnCrear);
 
         add(panelSuperior, BorderLayout.NORTH);
-        add(new JScrollPane(areaResultado), BorderLayout.CENTER);
+
+        panelTablero = new JPanel();
+        add(panelTablero, BorderLayout.CENTER);
 
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setVisible(true);
     }
 
-    // Getters para los valores introducidos
-    public String getTamaño() { return campoTamaño.getText(); }
-    public String getFila() { return campoFila.getText(); }
-    public String getColumna() { return campoColumna.getText(); }
-    public JButton getBtnIniciar() { return btnIniciar; }
-    public void mostrarResultado(String texto) {
-        areaResultado.setText(texto);
+    public void construirTablero(int n, ControladorCaballo controlador) {
+        panelTablero.removeAll();
+        panelTablero.setLayout(new GridLayout(n, n));
+        botones = new JButton[n][n];
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                JButton boton = new JButton();
+                boton.setBackground((i + j) % 2 == 0 ? Color.WHITE : Color.GRAY);
+                boton.setOpaque(true);
+                boton.setFont(new Font("Arial", Font.BOLD, 16));
+                int finalI = i;
+                int finalJ = j;
+                boton.addActionListener(e -> controlador.empezarDesde(finalI, finalJ));
+                botones[i][j] = boton;
+                panelTablero.add(boton);
+            }
+        }
+
+        revalidate();
+        repaint();
+    }
+
+    public String getTamaño() {
+        return campoTamaño.getText();
+    }
+
+    public JButton getBtnCrear() {
+        return btnCrear;
+    }
+
+    public void mostrarRecorrido(int[][] recorrido) {
+        for (int i = 0; i < recorrido.length; i++) {
+            for (int j = 0; j < recorrido.length; j++) {
+                botones[i][j].setText(recorrido[i][j] >= 0 ? String.valueOf(recorrido[i][j]) : "");
+            }
+        }
     }
 }
